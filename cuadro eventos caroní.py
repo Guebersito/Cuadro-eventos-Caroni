@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-# --- indicadores ---
 INDICADORES_BASE = [
     "Instalacion de dispositivo", "Revision de dispositivo", "Reemplazo de dispositivo",
     "Reubicacion de dispositivo", "Reubicacion de equipo", "Exceso de velocidad",
@@ -21,7 +20,6 @@ if "eventos" not in st.session_state:
 if "indicadores" not in st.session_state or len(st.session_state.indicadores) == 0:
     st.session_state.indicadores = INDICADORES_BASE.copy()
 
-# --- Función para generar número correlativo y llevar el orden ---
 def generar_numero_reporte():
     if st.session_state.eventos.empty:
         return "MGPS-0001"
@@ -31,7 +29,6 @@ def generar_numero_reporte():
         nuevo = numero + 1
         return f"MGPS-{nuevo:04d}"
 
-# --- Banner ---
 st.markdown("""
     <style>
     .banner-container {
@@ -79,10 +76,10 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# --- Pestañas principales ---
+
 tab1, tab2, tab3 = st.tabs(["➕ Gestión de eventos", "📋 Eventos y distribución", "📊 Indicadores"])
 
-# --- TAB 1: Gestión de eventos ---
+
 with tab1:
     st.markdown('<div class="section">', unsafe_allow_html=True)
     st.subheader("Añadir nuevo evento")
@@ -92,11 +89,11 @@ with tab1:
 
     fecha = st.date_input("Fecha")
     
-    # Selector con opción vacía al inicio
+
     indicador_seleccionado = st.selectbox(
         "Indicador",
         [""] + st.session_state.indicadores,
-        index=0  # Muestra la opción vacía por defecto
+        index=0  
     )
     
     unidad = st.text_input("Unidad")
@@ -172,7 +169,6 @@ with tab1:
                 st.info("Eliminación cancelada")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAB 2: Eventos y distribución ---
 with tab2:
     st.markdown('<div class="section">', unsafe_allow_html=True)
     st.subheader("Eventos registrados")
@@ -185,7 +181,6 @@ with tab2:
     if indicador_filtro != "Todos":
         df_filtrado = df_filtrado[df_filtrado["Indicador"] == indicador_filtro]
 
-    # Eliminar columna de Correlativo (por si acaso)
     if "Correlativo" in df_filtrado.columns:
         df_filtrado = df_filtrado.drop(columns=["Correlativo"])
 
@@ -206,7 +201,6 @@ with tab2:
         st.info("No hay eventos para mostrar con los filtros seleccionados.")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAB 3: Indicadores ---
 with tab3:
     st.markdown('<div class="section">', unsafe_allow_html=True)
     st.subheader("Indicadores Totales")
@@ -218,5 +212,4 @@ with tab3:
         st.info("No hay indicadores definidos. Agrega uno en la pestaña de gestión ⚙️")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Footer ---
 st.caption("Cuadro de eventos BETA 0.1 - Fospuca Caroní")
